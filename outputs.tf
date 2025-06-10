@@ -43,6 +43,16 @@ output "tier" {
   description = "The environment tier"
 }
 
+output "ec2_service_role_name" {
+  value       = join("", aws_iam_role.service[*].name)
+  description = "EC2 service IAM role name"
+}
+
+output "ec2_service_role_arn" {
+  value       = join("", aws_iam_role.service[*].arn)
+  description = "EC2 service IAM role ARN"
+}
+
 output "application" {
   value       = join("", aws_elastic_beanstalk_environment.default[*].application)
   description = "The Elastic Beanstalk Application for this environment"
