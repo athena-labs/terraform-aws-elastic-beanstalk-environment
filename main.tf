@@ -891,53 +891,51 @@ resource "aws_elastic_beanstalk_environment" "default" {
 
   ###=========================== Autoscale trigger ========================== ###
 
-  setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "MeasureName"
-    value     = var.autoscale_measure_name
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "Statistic"
-    value     = var.autoscale_statistic
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "Unit"
-    value     = var.autoscale_unit
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "LowerThreshold"
-    value     = var.autoscale_lower_bound
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "LowerBreachScaleIncrement"
-    value     = var.autoscale_lower_increment
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "UpperThreshold"
-    value     = var.autoscale_upper_bound
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "UpperBreachScaleIncrement"
-    value     = var.autoscale_upper_increment
-    resource  = ""
+  dynamic "setting" {
+    for_each = var.environment_type == "LoadBalanced" ? [
+      {
+        namespace = "aws:autoscaling:trigger"
+        name      = "MeasureName"
+        value     = var.autoscale_measure_name
+      },
+      {
+        namespace = "aws:autoscaling:trigger"
+        name      = "Statistic"
+        value     = var.autoscale_statistic
+      },
+      {
+        namespace = "aws:autoscaling:trigger"
+        name      = "Unit"
+        value     = var.autoscale_unit
+      },
+      {
+        namespace = "aws:autoscaling:trigger"
+        name      = "LowerThreshold"
+        value     = var.autoscale_lower_bound
+      },
+      {
+        namespace = "aws:autoscaling:trigger"
+        name      = "LowerBreachScaleIncrement"
+        value     = var.autoscale_lower_increment
+      },
+      {
+        namespace = "aws:autoscaling:trigger"
+        name      = "UpperThreshold"
+        value     = var.autoscale_upper_bound
+      },
+      {
+        namespace = "aws:autoscaling:trigger"
+        name      = "UpperBreachScaleIncrement"
+        value     = var.autoscale_upper_increment
+      }
+    ] : []
+  
+    content {
+      namespace = setting.value.namespace
+      name      = setting.value.name
+      value     = setting.value.value
+      resource  = ""
+    }
   }
 
   ###=========================== Scheduled Actions ========================== ###
