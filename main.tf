@@ -462,6 +462,21 @@ locals {
       namespace = "aws:elbv2:loadbalancer"
       name      = "SharedLoadBalancer"
       value     = var.shared_loadbalancer_arn
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "HealthCheckPath"
+      value     = var.healthcheck_url
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "MatcherHTTPCode"
+      value     = join(",", sort(var.healthcheck_httpcodes_to_match))
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "HealthCheckTimeout"
+      value     = var.healthcheck_timeout
     }
   ]
 
